@@ -11,7 +11,11 @@ namespace _05_hide_and_seek
     /// </summary>
     public class Hider
     {
-        // TODO: Add any member variables here
+        // In the future, we'll make some of these member variables/functions private,
+        // but for now, we'll just make everything public, until we discuss it in more detail.
+
+        public int _location;
+        public List<int> _distances;
 
         /// <summary>
         /// Initializes the location of the hider to a random location 1-1000.
@@ -19,7 +23,11 @@ namespace _05_hide_and_seek
         /// </summary>
         public Hider()
         {
-            throw new NotImplementedException();
+            // Start at a new random position from 1-1000
+            Random randomGenerator = new Random();
+            _location = randomGenerator.Next(1, 1001);
+
+            _distances = new List<int>();
         }
 
         /// <summary>
@@ -29,7 +37,11 @@ namespace _05_hide_and_seek
         /// <param name="seekerLocation">The current location of the seeker.</param>
         public void Watch(int seekerLocation)
         {
-            throw new NotImplementedException();
+            // Compute the distance from the seeker
+            int distance = Math.Abs(_location - seekerLocation);
+
+            // Add this distance to the end of our list
+            _distances.Add(distance);
         }
 
         /// <summary>
@@ -43,7 +55,33 @@ namespace _05_hide_and_seek
         /// <returns>The hint message</returns>
         public string GetHint()
         {
-            throw new NotImplementedException();
+            string hint = "";
+
+            if (_distances.Count < 2)
+            {
+                // we don't have enough information to know if they are getting
+                // warmer or colder, so just give a generic message
+                hint = "(-.-) Maybe I'll take a nap.";
+            }
+            else
+            {
+                if (IsFound())
+                {
+                    hint = "(;.;) You found me!";
+                }
+                else if (_distances[_distances.Count - 1] > _distances[_distances.Count - 2])
+                {
+                    // the latest distance is further away than before
+                    hint = "(^.^) Getting colder!";
+                }
+                else
+                {
+                    // The latest distance is the same or closer
+                    hint = "(>.<) Getting warmer!";
+                }
+            }
+
+            return hint;
         }
 
         /// <summary>
@@ -52,7 +90,7 @@ namespace _05_hide_and_seek
         /// <returns>True if the hider has been found.</returns>
         public bool IsFound()
         {
-            throw new NotImplementedException();
+            return _distances[_distances.Count - 1] == 0;
         }
     }
 }
